@@ -3,11 +3,6 @@
 #include "string"
  
 namespace JsonLib {
-    private struct Link {
-        IValue* val;
-        Link* next;
-        Link(IValue* _val = nullptr, Link* _next = nullptr) : val(_val), next(_next) {}
-    };
 
     private enum class ValueType {OBJECT, SRING};
 
@@ -22,6 +17,12 @@ namespace JsonLib {
         //virtual IterValue* itr() = 0;
         virtual std::string getVal() = 0;
         virtual std::string toString() = 0;
+    };
+
+    private struct Link {
+        IValue* val;
+        Link* next;
+        Link(IValue* _val = nullptr, Link* _next = nullptr) : val(_val), next(_next) {}
     };
 
     private class strValue : public IValue {
@@ -53,7 +54,7 @@ namespace JsonLib {
         Json() {
             root = nullptr;
         }
-        void load(std::string filename);
+        void load(System::String^ filename);
         //void save(std::string filename);
         //void add();  // добавить эелемент
         //void del();  // удалить элемент
