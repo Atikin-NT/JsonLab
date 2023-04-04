@@ -1,0 +1,13 @@
+{
+    "root": {
+        "resultset": {
+            "count": "18",
+            "page": "4"
+        },
+        "metadata": {
+            "user": "Atikin",
+            "password": "123456"
+        },
+        "categories_facets": ""
+    }
+}

@@ -16,7 +16,9 @@ namespace JsonLabTest
         [Test]
         public void Test1()
         {
-            Json tmp;
+            Json tmp = new Json();
+            //tmp
+
             Console.WriteLine("Hello");
             Assert.Pass();
         }
