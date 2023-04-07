@@ -1,7 +1,6 @@
 #pragma once
-
-#pragma once
 #include <iostream>
+#include "JsonParser.h"
 #include "string"
 
 namespace JsonLib {
@@ -52,10 +51,12 @@ namespace JsonLib {
 
     class Json {
         listValue* root;
+        Tokenizer tokenizer;
     public:
-        Json() {
+        Json(std::string filename): tokenizer(filename){
             root = nullptr;
         }
+        void parse();
         void load(std::string filename);
         //void save(std::string filename);
         //void add();  // добавить эелемент
