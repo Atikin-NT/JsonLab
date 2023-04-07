@@ -1,12 +1,14 @@
 #pragma once
+
+#pragma once
 #include <iostream>
 #include "string"
- 
+
 namespace JsonLib {
 
-    private enum class ValueType {OBJECT, SRING};
+    enum class ValueType { OBJECT, SRING };
 
-    private class IValue {
+    class IValue {
         std::string key;
     public:
         IValue(std::string _key) : key(_key) {}
@@ -19,16 +21,16 @@ namespace JsonLib {
         virtual std::string toString() = 0;
     };
 
-    private struct Link {
+    struct Link {
         IValue* val;
         Link* next;
         Link(IValue* _val = nullptr, Link* _next = nullptr) : val(_val), next(_next) {}
     };
 
-    private class strValue : public IValue {
+    class strValue : public IValue {
         std::string val;
     public:
-        strValue(std::string _key, std::string _val): IValue(_key) {
+        strValue(std::string _key, std::string _val) : IValue(_key) {
             val = _val;
         }
         ValueType getType() override {
@@ -36,11 +38,11 @@ namespace JsonLib {
         }
     };
 
-    private class listValue : public IValue {
+    class listValue : public IValue {
         Link* list;
         std::string key;
     public:
-        listValue(Link* _list, std::string _key): IValue(_key) {
+        listValue(Link* _list, std::string _key) : IValue(_key) {
             list = _list;
         }
         ValueType getType() override {
@@ -48,13 +50,13 @@ namespace JsonLib {
         }
     };
 
-    public ref class Json {
+    class Json {
         listValue* root;
     public:
         Json() {
             root = nullptr;
         }
-        void load(System::String^ filename);
+        void load(std::string filename);
         //void save(std::string filename);
         //void add();  // добавить эелемент
         //void del();  // удалить элемент
