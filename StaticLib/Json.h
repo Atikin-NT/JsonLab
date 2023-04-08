@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "JsonParser.h"
+#include "Tokenizer.h"
 #include "string"
 
 namespace JsonLib {
@@ -17,49 +17,91 @@ namespace JsonLib {
         virtual ValueType getType() = 0;
         //virtual IterValue* itr() = 0;
         virtual std::string getVal() = 0;
-        virtual std::string toString() = 0;
+        //virtual std::string toString() = 0;
     };
 
     struct Link {
         IValue* val;
         Link* next;
         Link(IValue* _val = nullptr, Link* _next = nullptr) : val(_val), next(_next) {}
+        void setVal(IValue* _val) {
+            val = _val;
+        }
+        std::string getVal() {
+            return val->getVal();
+        }
     };
 
     class strValue : public IValue {
         std::string val;
+        Link* parent;
     public:
-        strValue(std::string _key, std::string _val) : IValue(_key) {
+        strValue(
+            std::string _key, 
+            std::string _val,
+            Link* _parent = nullptr) : IValue(_key) {
             val = _val;
+            parent = _parent;
         }
         ValueType getType() override {
             return ValueType::SRING;
+        }
+        std::string getVal() override {
+            return val;
         }
     };
 
     class listValue : public IValue {
         Link* list;
-        std::string key;
+        Link* last;
+        listValue* parent;
     public:
-        listValue(Link* _list, std::string _key) : IValue(_key) {
+        listValue(
+            std::string _key = "",
+            listValue* _parent = nullptr,
+            Link * _list = new Link()) : IValue(_key) {
             list = _list;
+            last = list;
+            parent = _parent;
         }
+        void add(Link* val);
         ValueType getType() override {
             return ValueType::OBJECT;
         }
+        listValue* getParent() {
+            if (parent == nullptr) {
+                return this;
+            }
+            return parent;
+        }
+        std::string getVal() override {
+            std::string val = "";
+            Link* tmp = list->next;
+            while (tmp != nullptr) {
+                val += tmp->getVal();
+                val += "   ";
+                tmp = tmp->next;
+            }
+            
+            return val;
+        }
+
     };
 
     class Json {
         listValue* root;
         Tokenizer tokenizer;
+        Link* current_el;
     public:
         Json(std::string filename): tokenizer(filename){
-            root = nullptr;
+            root = new listValue();
+            current_el = nullptr;
         }
         void parse();
         void load(std::string filename);
         //void save(std::string filename);
-        //void add();  // добавить эелемент
+        void add(std::string key, Link* list);  // добавить эелемент
+        //void add(std::string key, std::string value);  // добавить эелемент
         //void del();  // удалить элемент
 
         //void next(); // идём дальше

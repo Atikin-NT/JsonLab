@@ -1,4 +1,4 @@
-#include "JsonParser.h"
+#include "Tokenizer.h"
 
 
 Tokenizer::Tokenizer(const std::string filename){
@@ -58,7 +58,6 @@ Token Tokenizer::getToken() {
 	else if (c == ',') {
 		token.type = TOKEN::COMMA;
 	}
-	std::cout << "Type = " << token.getStringType() << " Value = " << token.value << std::endl;
 	return token;
 }
 
