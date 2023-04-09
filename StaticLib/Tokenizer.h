@@ -4,7 +4,7 @@
 #include "string"
 
 
-enum class TOKEN {
+enum class TOKEN {  // все возможные типы данных при парсинге
 	CURLY_OPEN,
 	CURLY_CLOSE,
 	COLON,
@@ -15,9 +15,9 @@ enum class TOKEN {
 
 struct Token
 {
-	std::string value;
-	TOKEN type;
-	std::string getStringType() {
+	std::string value;  // значение токена
+	TOKEN type;  // тип токена
+	std::string getStringType() { // возращение типа в типе String. Нужно только для дэбага
 		switch (type)
 		{
 		case TOKEN::CURLY_OPEN:
@@ -36,13 +36,12 @@ struct Token
 	}
 };
 
-class Tokenizer {
-	std::fstream file;
-	int prevPos;
+class Tokenizer {  // анализатор файла
+	std::fstream file;  // входной файл
 public:
 	Tokenizer(std::string filename);
-	char getWithoutWhiteSpace();
+	char getWithoutWhiteSpace();  // обрезаем пробелы и перенос строки
 
-	Token getToken();
-	bool hasMoreTokens();
+	Token getToken(); // поиск следующего токена в файле
+	bool hasMoreTokens();  // проверяем на конец файла
 };

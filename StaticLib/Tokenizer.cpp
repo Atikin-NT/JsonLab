@@ -3,7 +3,7 @@
 
 Tokenizer::Tokenizer(const std::string filename){
 	file.open(filename, std::ios::in);
-	if (!file.good()) {
+	if (!file.good()) {  // проверка, что файл удалось отрыть
 		std::cout << "File open error" << std::endl;
 	}
 }
@@ -16,6 +16,7 @@ char Tokenizer::getWithoutWhiteSpace() {
 
 		if ((c == ' ' || c == '\n') && !file.good())
 		{
+			// если самый конец файла, то вернем пустую строку
 			//std::cout << file.eof() << " " << file.fail() << std::endl;
 			return ' ';
 		}
@@ -30,13 +31,13 @@ char Tokenizer::getWithoutWhiteSpace() {
 
 Token Tokenizer::getToken() {
 	char c;
-	if (file.eof()) {
+	if (file.eof()) {  // если файл изначально пустой, то бан
 		std::cout << "Exhaused tokens" << std::endl;
 	}
-	c = getWithoutWhiteSpace();
+	c = getWithoutWhiteSpace();  // получаем токен
 
 	Token token;
-	if (c == '"') {
+	if (c == '"') {  
 		token.type = TOKEN::STRING;
 		token.value = "";
 		file.get(c);
