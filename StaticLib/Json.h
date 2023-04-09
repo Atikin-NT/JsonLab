@@ -74,8 +74,34 @@ namespace JsonLib {
             return parent;
         }
         std::string toString() override;  // Преобразование в красивую строку формата "<key>": { <value> }
+        
+        // ----------------------------------------------------------------------------------------------------------------
+
+        Link* getHead() {
+            return head;
+        }
 
     };
+
+    //class Iterator {
+    //    Link* root;
+    //public:
+    //    Iterator(Link* head) : root(head) {};
+    //    bool hasNext() {
+    //        if (root->next != nullptr) return true;
+    //        else return false;
+    //    }
+
+    //    IValue* next() {
+    //        IValue* val;
+    //        if (!hasNext()) throw - 1;
+    //        Link* l = root.
+
+
+
+
+    //    }
+    //};
 
     class Json {
         listValue* root;  // изначально наш объект состоит из пустого списка. ВНИМАНИЕ! Этот указатель будет указывать не на "голову" списка всего Json, а на тот в котором мы сейчас находимся
@@ -86,6 +112,7 @@ namespace JsonLib {
             root = new listValue();
             current_el = nullptr;
         }
+        std::string getString();
         void parse();  // парсинг из файла
         //void load(std::string filename);
         //void save(std::string filename);

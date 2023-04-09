@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MyDLL;
 
 namespace WindowsFormsAppJson
 {
@@ -23,8 +24,13 @@ namespace WindowsFormsAppJson
             OpenFileDialog openFile = new OpenFileDialog();
             if (openFile.ShowDialog() == DialogResult.OK)
             {
-                richTextBox1.Text = File.ReadAllText(openFile.FileName);
-             }
+                Json json = new Json(openFile.FileName.ToString());
+                richTextBox1.AcceptsTab = true;
+                richTextBox1.Text = json.test();
+                //richTextBox1.Text = File.ReadAllText(openFile.FileName);
+                //richTextBox1.Text = ;
+
+            }
         }
     }
 }
