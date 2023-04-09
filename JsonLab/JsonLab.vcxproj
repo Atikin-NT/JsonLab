@@ -94,7 +94,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/Zc:twoPhase-	
  %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>C:\Users\Atikin\Desktop\University\основы программирования\semestr 4\JsonLab\StaticLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\FucingTrash\Programming\Repozitories\UNN-PROJ\JsonLab\StaticLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,7 +128,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/Zc:twoPhase-	
  %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>C:\Users\Atikin\Desktop\University\основы программирования\semestr 4\JsonLab\StaticLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\FucingTrash\Programming\Repozitories\UNN-PROJ\JsonLab\StaticLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

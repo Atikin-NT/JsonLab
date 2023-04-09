@@ -10,7 +10,7 @@ namespace MyDLL {
 		JsonLib::Json* json;
 	public:
 		Json() {
-			json = new JsonLib::Json();
+			json = new JsonLib::Json("");
 		}
 	};
 
