@@ -16,24 +16,8 @@ namespace MyDLL {
 			json->parse();
 		}
 		System::String^ getString() {
-			System::String^ str = gcnew System::String(json->getString().data());
+			System::String^ str = gcnew System::String(json->toString().data());
 			return str;
-		}
-		System::String^ toString() {
-			std::string val = "{\n";
-			JsonLib::Link* linkVal = JsonLib::listValue::head->next;
-			while (linkVal != nullptr) {
-				if (linkVal->val->getType() == ValueType::OBJECT) {
-					val += "\"" + linkVal->val->getKey() + "\":";
-				}
-				val += linkVal->getVal();
-				linkVal = linkVal->next;
-			}
-			return val + "\n}\n";
-
-
-			//System::String^ str = gcnew System::String((json->getString() + "\t" + "aaaa").data());
-			//return str;
 		}
 		void MarshalString(System::String^ s, std::string& os) {
 			using namespace System::Runtime::InteropServices;

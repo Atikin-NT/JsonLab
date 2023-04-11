@@ -103,6 +103,7 @@ namespace JsonLib {
     //    }
     //};
 
+
     class Json {
         listValue* root;  // изначально наш объект состоит из пустого списка. ВНИМАНИЕ! Этот указатель будет указывать не на "голову" списка всего Json, а на тот в котором мы сейчас находимся
         Tokenizer tokenizer;  // для распознавая объектов при чтении из файла. Подробнее в Tokenizer.h
@@ -112,8 +113,24 @@ namespace JsonLib {
             root = new listValue();
             current_el = nullptr;
         }
-        std::string getString();
+        std::string getString() {
+            return root->toString();
+        };
         void parse();  // парсинг из файла
+
+        std::string toString() {
+            std::string val = "{\n";
+            Link* linkVal = root->getHead()->next;
+            while (linkVal != nullptr) {
+                if (linkVal->val->getType() == ValueType::OBJECT) {
+                    val += "\"" + linkVal->val->getKey() + "\":";
+                }
+                val += linkVal->getVal();
+                linkVal = linkVal->next;
+            }
+            return val + "\n}\n";
+        }
+
         //void load(std::string filename);
         //void save(std::string filename);
         //void add(std::string key, std::string value);  // добавить эелемент

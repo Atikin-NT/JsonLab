@@ -25,11 +25,7 @@ namespace WindowsFormsAppJson
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 Json json = new Json(openFile.FileName.ToString());
-                richTextBox1.AcceptsTab = true;
-                richTextBox1.Text = json.test();
-                //richTextBox1.Text = File.ReadAllText(openFile.FileName);
-                //richTextBox1.Text = ;
-
+                richTextBox1.Text = json.getString();
             }
         }
     }

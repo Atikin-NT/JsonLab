@@ -9,26 +9,22 @@ namespace JsonLib {
 		return "\"" + key + "\":\"" + val + "\",\n";
 	}
 
-	//std::string listValue::toString() {  // хз, как вывести с табул€цией
-	//	std::string val = "{\n";
-	//	Link* linkVal = head->next;
-	//	while (linkVal != nullptr) {
-	//		if (linkVal->val->getType() == ValueType::OBJECT) {
-	//			val += "\"" + linkVal->val->getKey() + "\":";
-	//		}
-	//		val += linkVal->getVal();
-	//		linkVal = linkVal->next;
-	//	}
-	//	return val + "\n}\n";
-	//}
+	std::string listValue::toString() {  // хз, как вывести с табул€цией
+		std::string val = "{\n";
+		Link* linkVal = head->next;
+		while (linkVal != nullptr) {
+			if (linkVal->val->getType() == ValueType::OBJECT) {
+				val += "\"" + linkVal->val->getKey() + "\":";
+			}
+			val += linkVal->getVal();
+			linkVal = linkVal->next;
+		}
+		return val + "\n}\n";
+	}
 
 	void listValue::add(Link* val) {
 		last->next = val;
 		last = last->next;
-	}
-
-	std::string Json::getString() {
-		return root->toString();
 	}
 
 	void Json::parse() {
