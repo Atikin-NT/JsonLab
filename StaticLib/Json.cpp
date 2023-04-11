@@ -5,6 +5,7 @@
 
 
 namespace JsonLib {
+
 	void Json::parse() {
 		Token token;
 		if (tokenizer.hasMoreTokens()) {  // скипаем первую открывающуюся фигурную скобку в файле

@@ -16,7 +16,7 @@ namespace MyDLL {
 			json->parse();
 		}
 		System::String^ getString() {
-			System::String^ str = gcnew System::String(json->toString().data());
+			System::String^ str = gcnew System::String(json->getString().data());
 			return str;
 		}
 		void MarshalString(System::String^ s, std::string& os) {
