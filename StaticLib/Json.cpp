@@ -41,9 +41,9 @@ namespace JsonLib {
 			else if (token.type == TOKEN::CURLY_CLOSE) { // если закрывающая скобка(конец объекта)
 				root = root->getParent();  // переходим на уровень выше
 			}
-			std::cout << root->toString() << std::endl;
 			// надо сделать обработчик запятой
 		}
+		std::cout << root->toString() << std::endl;
 	}
 
 	bool Json::has_in() {

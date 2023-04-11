@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <stack>
 #include "Tokenizer.h"
 #include "string"
 
@@ -68,6 +69,7 @@ namespace JsonLib {
         listValue* root;  // изначально наш объект состоит из пустого списка. ВНИМАНИЕ! Этот указатель будет указывать не на "голову" списка всего Json, а на тот в котором мы сейчас находимся
         Tokenizer tokenizer;  // для распознавая объектов при чтении из файла. Подробнее в Tokenizer.h
         Link* current_el;  // текущий элемент на котором мы сейчас находимся 
+        //std::stack<Link*> st;
     public:
         Json(std::string filename): tokenizer(filename){
             root = new listValue();
