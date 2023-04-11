@@ -37,6 +37,7 @@ Token Tokenizer::getToken() {
 	c = getWithoutWhiteSpace();  // получаем токен
 
 	Token token;
+	// '"'[a..z A..Z 0..9]*'"'
 	if (c == '"') {  
 		token.type = TOKEN::STRING;
 		token.value = "";

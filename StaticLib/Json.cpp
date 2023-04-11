@@ -1,32 +1,10 @@
 #include "Json.h"
+#include "ValueTypes.h"
 #include <fstream>
 #include <stdexcept>
 
 
 namespace JsonLib {
-
-	std::string strValue::toString() {
-		return "\"" + key + "\":\"" + val + "\",\n";
-	}
-
-	std::string listValue::toString() {  // хз, как вывести с табул€цией
-		std::string val = "{\n";
-		Link* linkVal = head->next;
-		while (linkVal != nullptr) {
-			if (linkVal->val->getType() == ValueType::OBJECT) {
-				val += "\"" + linkVal->val->getKey() + "\":";
-			}
-			val += linkVal->getVal();
-			linkVal = linkVal->next;
-		}
-		return val + "\n}\n";
-	}
-
-	void listValue::add(Link* val) {
-		last->next = val;
-		last = last->next;
-	}
-
 	void Json::parse() {
 		Token token;
 		if (tokenizer.hasMoreTokens()) {  // скипаем первую открывающуюс€ фигурную скобку в файле
@@ -63,8 +41,40 @@ namespace JsonLib {
 			else if (token.type == TOKEN::CURLY_CLOSE) { // если закрывающа€ скобка(конец объекта)
 				root = root->getParent();  // переходим на уровень выше
 			}
-			std::cout << root->toString() << std::endl;
 			// надо сделать обработчик зап€той
 		}
+		std::cout << root->toString() << std::endl;
+	}
+
+	bool Json::has_in() {
+		if (current_el->val->getType() == ValueType::OBJECT && !current_el->val->is_null())
+			return true;
+		return false;
+	}
+
+	bool Json::has_next() {
+		if (current_el->next == nullptr)
+			return false;
+		return true;
+	}
+
+	bool Json::has_prev() {
+		if (current_el->next == nullptr)
+			return false;
+		return true;
+	}
+
+	void Json::go_in() {
+		if (current_el->val->getType() == ValueType::OBJECT && !current_el->val->is_null())
+			current_el = ((listValue*)current_el->val)->get_head();
+	}
+
+	void Json::go_out() {
+		root = root->getParent();
+	}
+
+	void Json::go_down() {
+		if (has_next())
+			current_el = current_el->next;
 	}
 }

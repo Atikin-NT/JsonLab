@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <stack>
 #include "Tokenizer.h"
 #include "string"
 
@@ -12,12 +13,9 @@ namespace JsonLib {
         std::string key;
     public:
         IValue(std::string _key) : key(_key) {}
-        std::string getKey() {
-            return key;
-        }
+        std::string getKey() { return key; }
         virtual ValueType getType() = 0;
-        //virtual IterValue* itr() = 0;
-        //virtual std::string getVal() = 0;
+        virtual bool is_null() = 0;
         virtual std::string toString() = 0;
     };
 
@@ -25,12 +23,8 @@ namespace JsonLib {
         IValue* val;
         Link* next;
         Link(IValue* _val = nullptr, Link* _next = nullptr) : val(_val), next(_next) {}
-        void setVal(IValue* _val) {
-            val = _val;
-        }
-        std::string getVal() {
-            return val->toString();
-        }
+        void setVal(IValue* _val) { val = _val; }
+        std::string getVal() { return val->toString(); }
     };
 
     class strValue : public IValue {
@@ -44,10 +38,9 @@ namespace JsonLib {
             val = _val;
             parent = _parent;
         }
-        ValueType getType() override {
-            return ValueType::SRING;
-        }
+        ValueType getType() override { return ValueType::SRING; }
         std::string toString() override;  // Преобразование в красивую строку формата "<key>": "<value>",
+        bool is_null() override;
     };
 
     class listValue : public IValue {
@@ -63,16 +56,10 @@ namespace JsonLib {
             last = head;
             parent = _parent;
         }
+        Link* get_head() { return head; }
         void add(Link* val);  // добавить новый эелемент в список
-        ValueType getType() override {
-            return ValueType::OBJECT;
-        }
-        listValue* getParent() {
-            if (parent == nullptr) { // эта проверка нужна, тк самый первый список из класса Json не имеет родителz
-                return this;  //  и чтобы не было ошики, возращаем его самомго
-            }
-            return parent;
-        }
+        ValueType getType() override { return ValueType::OBJECT; }
+        listValue* getParent();
         std::string toString() override;  // Преобразование в красивую строку формата "<key>": { <value> }
         
         // ----------------------------------------------------------------------------------------------------------------
@@ -108,6 +95,7 @@ namespace JsonLib {
         listValue* root;  // изначально наш объект состоит из пустого списка. ВНИМАНИЕ! Этот указатель будет указывать не на "голову" списка всего Json, а на тот в котором мы сейчас находимся
         Tokenizer tokenizer;  // для распознавая объектов при чтении из файла. Подробнее в Tokenizer.h
         Link* current_el;  // текущий элемент на котором мы сейчас находимся 
+        //std::stack<Link*> st;
     public:
         Json(std::string filename): tokenizer(filename){
             root = new listValue();
@@ -117,19 +105,14 @@ namespace JsonLib {
             return root->toString();
         };
         void parse();  // парсинг из файла
+        bool has_in();
+        bool has_next();
+        bool has_prev();
 
-        std::string toString() {
-            std::string val = "{\n";
-            Link* linkVal = root->getHead()->next;
-            while (linkVal != nullptr) {
-                if (linkVal->val->getType() == ValueType::OBJECT) {
-                    val += "\"" + linkVal->val->getKey() + "\":";
-                }
-                val += linkVal->getVal();
-                linkVal = linkVal->next;
-            }
-            return val + "\n}\n";
-        }
+        void go_in();
+        void go_out();
+        void go_up();
+        void go_down();
 
         //void load(std::string filename);
         //void save(std::string filename);

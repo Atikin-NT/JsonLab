@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="Json.h" />
     <ClInclude Include="Tokenizer.h" />
+    <ClInclude Include="ValueTypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
