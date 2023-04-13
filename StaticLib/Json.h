@@ -16,15 +16,21 @@ namespace JsonLib {
         std::string getKey() { return key; }
         virtual ValueType getType() = 0;
         virtual bool is_null() = 0;
-        virtual std::string toString() = 0;
+        virtual std::string toString(std::string tab = "", IValue* currentKey = nullptr) = 0;
     };
 
     struct Link {
         IValue* val;
+        ValueType type;
         Link* next;
-        Link(IValue* _val = nullptr, Link* _next = nullptr) : val(_val), next(_next) {}
-        void setVal(IValue* _val) { val = _val; }
-        std::string getVal() { return val->toString(); }
+        Link(IValue* _val = nullptr, ValueType _type = ValueType::SRING, Link* _next = nullptr) : val(_val), type(_type), next(_next) {}
+        void setVal(IValue* _val, ValueType _type = ValueType::SRING) {
+            val = _val;
+            type = _type;
+        }
+        std::string toString() { return val->toString(); }
+        //IValue* getVal() { return val; }
+        //ValueType getType() { return type; }
     };
 
     class strValue : public IValue {
@@ -39,8 +45,27 @@ namespace JsonLib {
             parent = _parent;
         }
         ValueType getType() override { return ValueType::SRING; }
-        std::string toString() override;  // Преобразование в красивую строку формата "<key>": "<value>",
+        std::string toString(std::string tab = "", IValue* currentKey = nullptr) override;  // Преобразование в красивую строку формата "<key>": "<value>",
         bool is_null() override;
+    };
+
+    class Iterator {
+        Link *current;
+        Link *head;
+    public:
+        Iterator(Link* _head) : head(_head) {
+            if (head->next != nullptr) current = head->next;
+            else throw -1;
+        };
+        bool hasNext() { return current->next != nullptr; }
+
+        void next() {
+            if (!hasNext()) throw - 1;
+            current = current->next;
+        }
+
+        IValue* getVal() { return current->val; }
+        ValueType getType() { return current->type; }
     };
 
     class listValue : public IValue {
@@ -56,42 +81,14 @@ namespace JsonLib {
             last = head;
             parent = _parent;
         }
-        Link* get_head() { return head; }
+        Iterator getIter() { return Iterator(head); }
+        Link* getHead() { return head; }
         void add(Link* val);  // добавить новый эелемент в список
         ValueType getType() override { return ValueType::OBJECT; }
         listValue* getParent();
-        std::string toString() override;  // Преобразование в красивую строку формата "<key>": { <value> }
-        
-        // ----------------------------------------------------------------------------------------------------------------
-
+        std::string toString(std::string tab = "", IValue* currentKey = nullptr) override;  // Преобразование в красивую строку формата "<key>": { <value> }
         bool is_null();
-
-        Link* getHead() {
-            return head;
-        }
-
     };
-
-    //class Iterator {
-    //    Link* root;
-    //public:
-    //    Iterator(Link* head) : root(head) {};
-    //    bool hasNext() {
-    //        if (root->next != nullptr) return true;
-    //        else return false;
-    //    }
-
-    //    IValue* next() {
-    //        IValue* val;
-    //        if (!hasNext()) throw - 1;
-    //        Link* l = root.
-
-
-
-
-    //    }
-    //};
-
 
     class Json {
         listValue* root;  // изначально наш объект состоит из пустого списка. ВНИМАНИЕ! Этот указатель будет указывать не на "голову" списка всего Json, а на тот в котором мы сейчас находимся
@@ -104,7 +101,7 @@ namespace JsonLib {
             current_el = nullptr;
         }
         std::string getString() {
-            return root->toString();
+            return root->toString("", current_el->val);
         };
         void parse();  // парсинг из файла
         bool has_in();
