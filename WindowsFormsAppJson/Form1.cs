@@ -25,6 +25,7 @@ namespace WindowsFormsAppJson
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 Json json = new Json(openFile.FileName.ToString());
+                
                 richTextBox1.Text = json.getString();
             }
         }

@@ -29,12 +29,12 @@ namespace JsonLib {
 				token = tokenizer.getToken();
 				if (token.type == TOKEN::CURLY_OPEN) {  // если значенияе элемента новый объект, то ....
 					listValue* newList = new listValue(key, root);
-					current_el->setVal(newList);
+					current_el->setVal(newList, ValueType::OBJECT);
 					root->add(current_el); // добаляем в наш список новый элемент
 					root = newList;  // спускаемся на уровень ниже
 				}
 				else if (token.type == TOKEN::STRING) {  // если просто строка, то ....
-					current_el->setVal(new strValue(key, token.value, current_el));
+					current_el->setVal(new strValue(key, token.value, current_el), ValueType::SRING);
 					root->add(current_el);  // добаляем в наш список новый элемент
 				}
 			}
@@ -43,7 +43,8 @@ namespace JsonLib {
 			}
 			// надо сделать обработчик запятой
 		}
-		std::cout << root->toString() << std::endl;
+		current_el = root->getHead()->next;
+		std::cout << getString() << std::endl;
 	}
 
 	bool Json::has_in() {
@@ -66,7 +67,7 @@ namespace JsonLib {
 
 	void Json::go_in() {
 		if (current_el->val->getType() == ValueType::OBJECT && !current_el->val->is_null())
-			current_el = ((listValue*)current_el->val)->get_head();
+			current_el = ((listValue*)current_el->val)->getHead();
 	}
 
 	void Json::go_out() {

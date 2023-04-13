@@ -25,6 +25,7 @@ namespace MyDLL {
 			os = chars;
 			Marshal::FreeHGlobal(System::IntPtr((void*)chars));
 		}
+		void parse() { json->parse(); }
 	};
 
 }

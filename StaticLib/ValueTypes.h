@@ -8,8 +8,8 @@ namespace JsonLib {
 		return false;
 	}
 
-	std::string strValue::toString() {
-		return "\"" + key + "\":\"" + val + "\",\n";
+	std::string strValue::toString(std::string tab, IValue* currentKey) {
+		return "\"" + key + "\": \"" + val + "\"";
 	}
 
 	listValue* listValue::getParent() {
@@ -24,17 +24,32 @@ namespace JsonLib {
 		return false;
 	}
 
-	std::string listValue::toString() {  // хз, как вывести с табул€цией
-		std::string val = "{\n";
-		Link* linkVal = head->next;
-		while (linkVal != nullptr) {
-			if (linkVal->val->getType() == ValueType::OBJECT) {
-				val += "\"" + linkVal->val->getKey() + "\":";
+	std::string listValue::toString(std::string tab, IValue* currentKey) {
+
+		std::string str = "{\n";
+		Iterator i(head);
+		while (true) {
+			IValue* el = i.getVal();
+			str += tab + "    ";
+			if (el == currentKey) str += "$*$";
+
+			if (el->getType() == ValueType::SRING) {
+				strValue* s = static_cast<strValue*>(el);
+				str += s->toString();
 			}
-			val += linkVal->getVal();
-			linkVal = linkVal->next;
+			else if (el->getType() == ValueType::OBJECT) {
+				listValue* l = static_cast<listValue*>(el);
+				str += "\"" + l->getKey() + "\": ";
+				str += l->toString(tab + "    ");
+			}
+			//std::cout << i.hasNext() << std::endl;
+			if (i.hasNext()) str += ",";
+			str += "\n";
+
+			if (i.hasNext()) i.next();
+			else break;
 		}
-		return val + "\n}\n";
+		return str + tab + "}";
 	}
 
 	void listValue::add(Link* val) {
