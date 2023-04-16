@@ -23,14 +23,16 @@ namespace JsonLib {
         IValue* val;
         ValueType type;
         Link* next;
-        Link(IValue* _val = nullptr, ValueType _type = ValueType::SRING, Link* _next = nullptr) : val(_val), type(_type), next(_next) {}
+        Link* prev;
+        Link(Link* _prev, IValue* _val = nullptr, ValueType _type = ValueType::SRING, Link* _next = nullptr) : prev(_prev), val(_val), type(_type), next(_next) {}
+        ~Link() {
+            delete val;
+        }
         void setVal(IValue* _val, ValueType _type = ValueType::SRING) {
             val = _val;
             type = _type;
         }
         std::string toString() { return val->toString(); }
-        //IValue* getVal() { return val; }
-        //ValueType getType() { return type; }
     };
 
     class strValue : public IValue {
@@ -44,7 +46,9 @@ namespace JsonLib {
             val = _val;
             parent = _parent;
         }
+        ~strValue() {}
         ValueType getType() override { return ValueType::SRING; }
+        std::string getVal() { return val; }
         std::string toString(std::string tab = "", IValue* currentKey = nullptr) override;  // Преобразование в красивую строку формата "<key>": "<value>",
         bool is_null() override;
     };
@@ -52,11 +56,11 @@ namespace JsonLib {
     class Iterator {
         Link *current;
         Link *head;
-        Link* prev;
     public:
         Iterator(Link* _head);
         bool hasNext() { return current->next != nullptr; }
         void next();
+        void back();
 
         IValue* getVal() { return current->val; }
         Link* getCurrent() { return current; }
@@ -71,14 +75,22 @@ namespace JsonLib {
         listValue(
             std::string _key = "",
             listValue* _parent = nullptr,
-            Link * _head = new Link()) : IValue(_key) {  // по умолчанию в писке будет храниться пустой элемент
+            Link * _head = new Link(nullptr)) : IValue(_key) {  // по умолчанию в писке будет храниться пустой элемент
             head = _head;
             last = head;
             parent = _parent;
         }
+        ~listValue() {
+            Link* tmp = head->next;
+            while (tmp != last) {
+                delete tmp->prev;
+            }
+            delete tmp;
+        }
         Iterator getIter() { return Iterator(head); }
         Link* getHead() { return head; }
         Link* getFirst() { return head->next; }
+        Link* getLast() { return last;  }
         void add(Link* val);  // добавить новый эелемент в список
         ValueType getType() override { return ValueType::OBJECT; }
         listValue* getParent();
@@ -94,7 +106,7 @@ namespace JsonLib {
     public:
         Json(std::string filename): tokenizer(filename){
             root = new listValue();
-            //current_el = nullptr;
+            current_el = nullptr;
         }
         std::string getString() {
             return root->toString("", iter_stack.top().getCurrent()->val);
@@ -109,14 +121,12 @@ namespace JsonLib {
         void go_up();
         void go_down();
 
-        //void load(std::string filename);
-        void save_to_file(std::string filename);
-        //void add(std::string key, std::string value);  // добавить эелемент
-        //void del();  // удалить элемент
 
-        //void next(); // идём дальше
-        //void down(); // идём в глубь
-        //void up(); // идём наверх
+        void del();
+        void setVal(std::string val);
+        void addVal(std::string key, std::string val);
+
+        void save_to_file(std::string filename);
     };
 }
 

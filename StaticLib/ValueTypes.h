@@ -62,14 +62,18 @@ namespace JsonLib {
 	Iterator::Iterator(Link* _head) : head(_head) {
 		if (head->next != nullptr) {
 			current = head->next;
-			prev = head->next;
 		}
 		else throw - 1;
 	}
 	void Iterator::next() {
 		if (hasNext()) {
-			prev = current;
 			current = current->next;
+		}
+	}
+
+	void Iterator::back() {
+		if (getCurrent()->prev != nullptr) {
+			current = getCurrent()->prev;
 		}
 	}
 
