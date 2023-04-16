@@ -2,6 +2,7 @@
 #include "ValueTypes.h"
 #include <fstream>
 #include <stdexcept>
+#include <iostream>
 
 
 namespace JsonLib {
@@ -76,5 +77,16 @@ namespace JsonLib {
 	void Json::go_down() {
 		if (has_next())
 			current_el = current_el->next;
+	}
+
+
+	void Json::save_to_file(std::string filename) {
+		std::ofstream file;
+		file.open(filename, std::ios::out);
+		if (!file.good()) {
+			throw std::logic_error("Open file for read");
+		}
+
+		file << root->toString();
 	}
 }

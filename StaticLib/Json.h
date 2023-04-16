@@ -86,7 +86,7 @@ namespace JsonLib {
         void go_down();
 
         //void load(std::string filename);
-        //void save(std::string filename);
+        void save_to_file(std::string filename);
         //void add(std::string key, std::string value);  // добавить эелемент
         //void del();  // удалить элемент
 
