@@ -6,6 +6,7 @@
 
 
 namespace JsonLib {
+
 	void Json::parse() {
 		Token token;
 		if (tokenizer.hasMoreTokens()) {  // скипаем первую открывающуюся фигурную скобку в файле
@@ -15,10 +16,13 @@ namespace JsonLib {
 			}
 		}
 		std::string key;
+		//iter_stack.push(root->getIter());
+		Link* current_el;
+
 		while (tokenizer.hasMoreTokens()) { // пока есть токены, читаем файл
 			Token token = tokenizer.getToken();
-			std::cout << "Type = " << token.getStringType() << " Value = " << token.value << std::endl;
-			if (token.type == TOKEN::STRING) { // если токе строка (это будет ключ), то...
+			//std::cout << "Type = " << token.getStringType() << " Value = " << token.value << std::endl;
+			if (token.type == TOKEN::STRING) { // если токен строка (это будет ключ), то...
 				key = token.value;
 				current_el = new Link();
 
@@ -30,12 +34,12 @@ namespace JsonLib {
 				token = tokenizer.getToken();
 				if (token.type == TOKEN::CURLY_OPEN) {  // если значенияе элемента новый объект, то ....
 					listValue* newList = new listValue(key, root);
-					current_el->setVal(newList);
+					current_el->setVal(newList, ValueType::OBJECT);
 					root->add(current_el); // добаляем в наш список новый элемент
 					root = newList;  // спускаемся на уровень ниже
 				}
 				else if (token.type == TOKEN::STRING) {  // если просто строка, то ....
-					current_el->setVal(new strValue(key, token.value, current_el));
+					current_el->setVal(new strValue(key, token.value, current_el), ValueType::SRING);
 					root->add(current_el);  // добаляем в наш список новый элемент
 				}
 			}
@@ -44,39 +48,57 @@ namespace JsonLib {
 			}
 			// надо сделать обработчик запятой
 		}
-		std::cout << root->toString() << std::endl;
+		//current_el = root->getFirst();
+		//std::cout << getString() << std::endl;
+		//listValue* tmp = (listValue*)current_el->val;
+		iter_stack.push(root->getIter());
 	}
 
 	bool Json::has_in() {
+		//Link* current_el = iter_stack.top().getCurrent();
 		if (current_el->val->getType() == ValueType::OBJECT && !current_el->val->is_null())
 			return true;
 		return false;
 	}
 
 	bool Json::has_next() {
+		//Link* current_el = iter_stack.top().getCurrent();
 		if (current_el->next == nullptr)
 			return false;
 		return true;
 	}
 
 	bool Json::has_prev() {
+		//Link* current_el = iter_stack.top().getCurrent();
 		if (current_el->next == nullptr)
 			return false;
 		return true;
 	}
 
 	void Json::go_in() {
-		if (current_el->val->getType() == ValueType::OBJECT && !current_el->val->is_null())
-			current_el = ((listValue*)current_el->val)->get_head();
+		Link* current_el = iter_stack.top().getCurrent();
+		if (current_el->val->getType() == ValueType::OBJECT && !current_el->val->is_null()) {
+			//Iterator new_iter((listValue*)current_el->val);
+			//current_el = new_iter.getVal();
+			iter_stack.push(((listValue*)current_el->val)->getIter());
+			current_el = ((listValue*)current_el->val)->getFirst();
+			//int tmp;
+			//iter_stack.push(((listValue*)current_el->val)->getIter());
+		}
 	}
 
 	void Json::go_out() {
-		root = root->getParent();
+		iter_stack.pop();
+		Link* current_el = iter_stack.top().getCurrent();
+		/*root = root->getParent();*/
 	}
 
 	void Json::go_down() {
-		if (has_next())
-			current_el = current_el->next;
+		iter_stack.top().next();
+	}
+
+	void Json::go_up() {
+
 	}
 
 
