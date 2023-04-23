@@ -52,7 +52,7 @@ namespace MyDLL {
 		void setVal(System::String^ val) {
 			std::string str = "";
 			MarshalString(val, str);
-			json->setVal(str); 
+			json->setVal(str);
 		}
 		void addVal(System::String^ key, System::String^ val) {
 
