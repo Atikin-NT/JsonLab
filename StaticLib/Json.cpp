@@ -75,16 +75,27 @@ namespace JsonLib {
 	}
 
 	void Json::go_out() {
-		iter_stack.pop();
-		Link* current_el = iter_stack.top().getCurrent();
+		if (iter_stack.size() > 1) {
+			iter_stack.pop();
+			Link* current_el = iter_stack.top().getCurrent();
+		}
 	}
 
 	void Json::go_down() {
-		iter_stack.top().next();
+		if (iter_stack.top().hasNext()) {
+			iter_stack.top().next();
+		}
+		/*else {
+			go_out();
+			iter_stack.top().next();
+		}*/
 	}
 
 	void Json::go_up() {
-		iter_stack.top().back();
+		if (iter_stack.top().getCurrent()->prev->val == NULL) {
+			go_out();
+		}
+		else iter_stack.top().back();
 	}
 
 	void Json::del() {

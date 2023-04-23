@@ -1,7 +1,11 @@
 #include "Json.h"
 
 int main() {
-	JsonLib::Json tmp("C:\\Users\\Atikin\\Desktop\\University\\основы программирования\\semestr 4\\JsonLab\\data.json");
+	std::string Atikin = "C:\\Users\\Atikin\\Desktop\\University\\основы программирования\\semestr 4\\JsonLab\\data.json";
+	std::string Leprikon = "C:\\FucingTrash\\Programming\\Repozitories\\UNN-PROJ\\JsonLab\\data.json";
+
+
+	JsonLib::Json tmp(Leprikon);
 	//tmp.load("C:\\Users\\Atikin\\Desktop\\University\\основы программирования\\semestr 4\\JsonLab\\data.json");
 	tmp.parse();
 

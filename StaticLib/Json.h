@@ -104,9 +104,12 @@ namespace JsonLib {
         Link* current_el;  // текущий элемент на котором мы сейчас находимс€ 
         std::stack<Iterator> iter_stack;
     public:
-        Json(std::string filename): tokenizer(filename){
+        Json(std::string filename) : tokenizer(filename) {
             root = new listValue();
             current_el = nullptr;
+        }
+        ~Json() {
+            delete root;
         }
         std::string getString() {
             return root->toString("", iter_stack.top().getCurrent()->val);
@@ -120,7 +123,6 @@ namespace JsonLib {
         void go_out();
         void go_up();
         void go_down();
-
 
         void del();
         void setVal(std::string val);
